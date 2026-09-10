@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Weatherwise
 
 A responsive Django weather planner that turns live Open-Meteo forecasts into trip decisions. The UI includes the four required states (welcome, loading, error, results), asks for city, country, dates and traveller persona, handles ambiguous city names explicitly, and produces daily verdicts plus one deduplicated packing list.
@@ -36,3 +37,6 @@ Hourly detail is deliberately omitted: the product is for fast trip decisions, n
 Set `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false`, `DJANGO_ALLOWED_HOSTS=your-domain`, run `python manage.py collectstatic --noinput`, and start with `gunicorn weatherwise.wsgi`.
 
 For Render, the included `render.yaml` supplies the build/start commands and generates the secret automatically. Create a new Blueprint from this repository, then replace or extend `DJANGO_ALLOWED_HOSTS` if you attach a custom domain.
+=======
+# WeatherWise
+>>>>>>> 18675b40eee1f80f2439729eb7133c099de9db0a
