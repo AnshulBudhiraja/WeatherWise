@@ -1,0 +1,79 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A trip-first weather planner with clear daily verdicts and a practical packing list.">
+  <title>Weatherwise - plan for the feeling, not the figures</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'planner/styles.css' %}">
+</head>
+<body data-today="{{ today }}" data-max-date="{{ max_date }}">
+  <div class="sky-orb orb-one"></div><div class="sky-orb orb-two"></div>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Weatherwise home"><span class="brand-mark">W</span><span>Weatherwise</span></a>
+    <span class="live-pill"><i></i> Live forecast data</span>
+  </header>
+
+  <main>
+    <section id="welcomeState" class="welcome-shell" aria-labelledby="pageTitle">
+      <div class="intro">
+        <p class="eyebrow">TRIP WEATHER, TRANSLATED</p>
+        <h1 id="pageTitle">Know what the sky means for <em>your trip.</em></h1>
+        <p class="lede">Pick a place and dates. We’ll turn the forecast into a clear daily plan and one useful packing list.</p>
+        <div class="benefit-row"><span>✓ 14-day outlook</span><span>✓ Persona-aware advice</span><span>✓ No weather jargon</span></div>
+      </div>
+
+      <form id="tripForm" class="planner-card" novalidate>
+        {% csrf_token %}
+        <div class="form-heading"><span>01</span><div><h2>Where are you headed?</h2><p>Your forecast starts here.</p></div></div>
+        <div class="field-grid">
+          <label><span>City</span><input id="city" name="city" placeholder="e.g. Jaipur" autocomplete="address-level2" required></label>
+          <label><span>Country</span><input id="country" name="country" placeholder="e.g. India" autocomplete="country-name" required></label>
+          <label><span>Start date</span><input id="startDate" name="start_date" type="date" min="{{ today }}" max="{{ max_date }}" required></label>
+          <label><span>End date</span><input id="endDate" name="end_date" type="date" min="{{ today }}" max="{{ max_date }}" required></label>
+        </div>
+        <fieldset>
+          <legend>Who are we advising?</legend>
+          <div class="persona-grid">
+            <label class="persona"><input type="radio" name="persona" value="explorer" checked><span class="persona-card"><b>🧭 Explorer</b><small>City breaks & flexible plans</small></span></label>
+            <label class="persona"><input type="radio" name="persona" value="trekker"><span class="persona-card"><b>🥾 Trekker</b><small>Trails & long outdoor days</small></span></label>
+            <label class="persona"><input type="radio" name="persona" value="event"><span class="persona-card"><b>✨ Event guest</b><small>Celebrations & dressy plans</small></span></label>
+            <label class="persona"><input type="radio" name="persona" value="family"><span class="persona-card"><b>🧸 With a toddler</b><small>Little-person logistics</small></span></label>
+          </div>
+        </fieldset>
+        <button class="primary-button" type="submit"><span>Plan around the weather</span><b>→</b></button>
+        <p class="fine-print">Forecasts powered by Open-Meteo · no account needed</p>
+      </form>
+    </section>
+
+    <section id="loadingState" class="state-panel loading-state" hidden aria-live="polite">
+      <div class="loader-sky"><span>☀</span><i></i><i></i><i></i></div>
+      <p class="eyebrow">READING THE SKY</p><h2>Turning weather into a plan…</h2>
+      <p>Checking the place, the dates and what matters for your kind of trip.</p>
+    </section>
+
+    <section id="errorState" class="state-panel error-state" hidden role="alert">
+      <span class="state-icon">!</span><p class="eyebrow">A SMALL WEATHER FRONT</p><h2>We couldn’t finish that forecast.</h2>
+      <p id="errorMessage"></p><div id="locationChoices" class="location-choices"></div>
+      <button id="tryAgain" class="secondary-button" type="button">← Edit trip details</button>
+    </section>
+
+    <section id="resultsState" class="results-shell" hidden aria-live="polite">
+      <div class="results-topbar"><button id="newSearch" class="text-button" type="button">← Plan another trip</button><span id="locationLine"></span></div>
+      <article id="summaryCard" class="summary-card"><p class="eyebrow">THE SHORT VERSION</p><h2 id="summaryText"></h2><p id="dateLine"></p></article>
+      <div class="section-heading"><div><p class="eyebrow">DAY BY DAY</p><h2>The forecast, translated</h2></div><span id="timezoneLine"></span></div>
+      <div id="forecastGrid" class="forecast-grid"></div>
+      <article class="packing-card">
+        <div><p class="eyebrow">PACK ONCE</p><h2>Your trip list</h2><p>One deduplicated list, based on the whole forecast and your travel style.</p></div>
+        <ul id="packingList"></ul>
+      </article>
+    </section>
+  </main>
+  <footer><span>Weatherwise</span><p>Advice is based on forecasts, which can change. Check local safety alerts before high-risk activities.</p></footer>
+  <script src="{% static 'planner/app.js' %}" defer></script>
+</body>
+</html>
